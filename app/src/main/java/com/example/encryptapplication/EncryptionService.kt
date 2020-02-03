@@ -15,8 +15,8 @@ class EncryptionService : Service() {
 
     // Binder given to clients
     private val binder = LocalBinder()
-    val PREFS_NAME = "users"
-    val sharedPref: SharedPreferences = this.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    val PREFS_NAME = "us ers"
+    lateinit var sharedPref: SharedPreferences
     var myKeyPair: ArrayList<KeyPair> = ArrayList()
 
     inner class LocalBinder : Binder() {
@@ -26,11 +26,13 @@ class EncryptionService : Service() {
     }
 
     override fun onBind(intent: Intent): IBinder {
-
+        sharedPref = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         return binder
     }
 
     fun storePublicKey(name: String, key: String) {
+        val PREFS_NAME = "us ers"
+        val sharedPref: SharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val editor: SharedPreferences.Editor = sharedPref.edit()
         editor.putString(name, key)
         editor.apply()

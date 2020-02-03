@@ -13,14 +13,6 @@
             android:name=".EncryptionService"
             android:enabled="true"
             android:exported="true"></service>
-        <service
-            android:name=".RSAService"
-            android:enabled="true"
-            android:exported="true" />
-        <service
-            android:name=".EncryptService"
-            android:enabled="true"
-            android:exported="true" />
 
         <activity android:name=".MainActivity">
             <intent-filter>

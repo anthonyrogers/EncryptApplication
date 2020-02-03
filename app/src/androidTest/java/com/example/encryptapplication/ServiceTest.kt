@@ -7,11 +7,16 @@ import android.os.IBinder
 import android.util.Log
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.rule.ServiceTestRule
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThat
 import org.junit.Rule
 import org.junit.Test
 import java.util.concurrent.TimeoutException
 
 class ServiceTest {
+
+    lateinit var service: EncryptionService
+
     @get:Rule
     val serviceRule = ServiceTestRule()
 
@@ -24,7 +29,7 @@ class ServiceTest {
             EncryptionService::class.java
         ).apply {
             // Data can be passed to the service via the Intent.
-            //putExtra(SEED_KEY, 42L)
+           // putExtra("test", 42L)
         }
 
         // Bind the service and grab a reference to the binder.
@@ -32,12 +37,17 @@ class ServiceTest {
 
         // Get the reference to the service, or you can call
         // public methods on the binder directly.
-        val service: EncryptionService = (binder as EncryptionService.LocalBinder).getService()
+        service = (binder as EncryptionService.LocalBinder).getService()
 
         // Verify that the service is working correctly.
         //assertThat(service.getRandomInt(), `is`(any(Int::class.java)))
+    }
 
-        service.storePublicKey("Anthonyy", "Rogers")
-        //Log.e(TAG, service.getPublicKey("Anthonyy"))
+
+    @Test
+    @Throws(TimeoutException::class)
+    fun generateKey(){
+    service.generateKey()
+
     }
 }
