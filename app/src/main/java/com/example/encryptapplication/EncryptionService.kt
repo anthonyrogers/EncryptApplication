@@ -38,8 +38,6 @@ class EncryptionService : Service() {
         return keyGen.genKeyPair()
     }
 
-
-
     fun getPublicKey(name: String): String?{
         return sharedPref.getString(name, null)
     }
@@ -51,7 +49,6 @@ class EncryptionService : Service() {
         editor.commit()
 
     }
-
 
     fun resetKey(name: String){
         val editor: SharedPreferences.Editor = sharedPref.edit()
@@ -78,5 +75,4 @@ class EncryptionService : Service() {
         val publicKeySpec = X509EncodedKeySpec(Base64.decode(key, Base64.DEFAULT))
         return keyFactory.generatePublic(publicKeySpec)
     }
-
 }

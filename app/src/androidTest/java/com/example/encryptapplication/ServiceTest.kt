@@ -20,7 +20,6 @@ import java.util.concurrent.TimeoutException
 
 class ServiceTest {
 
-
     lateinit var service: EncryptionService
 
     @get:Rule
@@ -59,7 +58,6 @@ class ServiceTest {
         assertEquals(text, decrypted)
     }
 
-
     @Test
     @Throws(TimeoutException::class)
     fun canSavePublicKey() {
@@ -71,7 +69,6 @@ class ServiceTest {
         val key = service.getPublicKeyFromString(pubKey.toString())
         assertEquals(keyPair.public, key)
     }
-
 
     @Test
     @Throws(TimeoutException::class)
