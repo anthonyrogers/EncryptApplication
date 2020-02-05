@@ -7,20 +7,28 @@ import android.os.IBinder
 import android.util.Log
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.rule.ServiceTestRule
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertThat
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.core.IsInstanceOf.any
+import org.junit.Assert.*
+import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.Test
+import java.security.KeyPair
+import java.util.*
 import java.util.concurrent.TimeoutException
 
 class ServiceTest {
 
+
     lateinit var service: EncryptionService
+
+
 
     @get:Rule
     val serviceRule = ServiceTestRule()
 
-    @Test
+    @Before
     @Throws(TimeoutException::class)
     fun testWithBoundService() {
         // Create the service Intent.
@@ -29,7 +37,7 @@ class ServiceTest {
             EncryptionService::class.java
         ).apply {
             // Data can be passed to the service via the Intent.
-           // putExtra("test", 42L)
+            // putExtra("test", 42L)
         }
 
         // Bind the service and grab a reference to the binder.
@@ -43,11 +51,40 @@ class ServiceTest {
         //assertThat(service.getRandomInt(), `is`(any(Int::class.java)))
     }
 
+    @Test
+    @Throws(TimeoutException::class)
+    fun canGetKeyPair() {
+
+        val service = service
+        val keyPair = service.generateKey()
+
+        assertNotNull(keyPair)
+    }
 
     @Test
     @Throws(TimeoutException::class)
-    fun generateKey(){
-    service.generateKey()
+    fun canEncrypt() {
+
+        val service = service
+        val keyPair = service.generateKey()
+        val text = "this text will be encrypted"
+        val byteArr = service.encrypt(text, keyPair.public)
+        val decrypted = service.decrypt(byteArr, keyPair.private)
+        assertEquals(text, decrypted)
+    }
+
+
+    @Test
+    @Throws(TimeoutException::class)
+    fun canSavePublicKey() {
+        val service = service
+        val keyPair = service.generateKey()
+
+        service.savePublicKey("Anthony", keyPair.public)
+        val pubKey = service.getPublicKey("Anthony")
+        val key = service.getPublicKeyFromString(pubKey.toString())
+        assertEquals(keyPair.public, key)
+
 
     }
 }

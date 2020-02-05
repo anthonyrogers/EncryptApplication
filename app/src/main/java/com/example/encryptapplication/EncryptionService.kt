@@ -15,9 +15,9 @@ class EncryptionService : Service() {
 
     // Binder given to clients
     private val binder = LocalBinder()
-    val PREFS_NAME = "us ers"
+    val PREFS_NAME = "users"
     lateinit var sharedPref: SharedPreferences
-    var myKeyPair: ArrayList<KeyPair> = ArrayList()
+
 
     inner class LocalBinder : Binder() {
         // Return this instance of LocalService so clients can call public methods
@@ -30,27 +30,29 @@ class EncryptionService : Service() {
         return binder
     }
 
-    fun storePublicKey(name: String, key: String) {
-        val PREFS_NAME = "us ers"
-        val sharedPref: SharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val editor: SharedPreferences.Editor = sharedPref.edit()
-        editor.putString(name, key)
-        editor.apply()
-    }
+
 
     fun generateKey(): KeyPair {
         val keyGen = KeyPairGenerator.getInstance("RSA")
         keyGen.initialize(1024)
-        myKeyPair.add(keyGen.genKeyPair())
         return keyGen.genKeyPair()
     }
+
+
 
     fun getPublicKey(name: String): String?{
         return sharedPref.getString(name, null)
     }
 
+    fun savePublicKey(name: String, key: PublicKey){
+        val editor: SharedPreferences.Editor = sharedPref.edit()
+        val keyString = Base64.encodeToString(key.encoded, Base64.DEFAULT)
+        editor.putString(name, keyString)
+        editor.commit()
+
+    }
+
     fun resetMyKeyPair(){
-        myKeyPair.clear()
         generateKey()
     }
 
@@ -76,7 +78,7 @@ class EncryptionService : Service() {
 
     fun getPublicKeyFromString(key: String): PublicKey {
         val keyFactory = KeyFactory.getInstance("RSA")
-        val publicKeySpec = X509EncodedKeySpec(Base64.decode(key,0))
+        val publicKeySpec = X509EncodedKeySpec(Base64.decode(key, Base64.DEFAULT))
         return keyFactory.generatePublic(publicKeySpec)
     }
 
