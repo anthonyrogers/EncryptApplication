@@ -52,9 +52,6 @@ class EncryptionService : Service() {
 
     }
 
-    fun resetMyKeyPair(){
-        generateKey()
-    }
 
     fun resetKey(name: String){
         val editor: SharedPreferences.Editor = sharedPref.edit()

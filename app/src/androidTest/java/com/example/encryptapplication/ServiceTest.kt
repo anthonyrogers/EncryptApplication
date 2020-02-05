@@ -31,24 +31,12 @@ class ServiceTest {
     @Before
     @Throws(TimeoutException::class)
     fun testWithBoundService() {
-        // Create the service Intent.
         val serviceIntent = Intent(
             ApplicationProvider.getApplicationContext<Context>(),
-            EncryptionService::class.java
-        ).apply {
-            // Data can be passed to the service via the Intent.
-            // putExtra("test", 42L)
-        }
+            EncryptionService::class.java)
 
-        // Bind the service and grab a reference to the binder.
         val binder: IBinder = serviceRule.bindService(serviceIntent)
-
-        // Get the reference to the service, or you can call
-        // public methods on the binder directly.
         service = (binder as EncryptionService.LocalBinder).getService()
-
-        // Verify that the service is working correctly.
-        //assertThat(service.getRandomInt(), `is`(any(Int::class.java)))
     }
 
     @Test
@@ -84,7 +72,19 @@ class ServiceTest {
         val pubKey = service.getPublicKey("Anthony")
         val key = service.getPublicKeyFromString(pubKey.toString())
         assertEquals(keyPair.public, key)
-
-
     }
+
+
+    @Test
+    @Throws(TimeoutException::class)
+    fun resetKey() {
+        val service = service
+        service.resetKey("Anthony")
+
+       assertNull(service.getPublicKey("Anthony"))
+    }
+
+
+
+
 }
