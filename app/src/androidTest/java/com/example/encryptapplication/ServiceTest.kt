@@ -23,8 +23,6 @@ class ServiceTest {
 
     lateinit var service: EncryptionService
 
-
-
     @get:Rule
     val serviceRule = ServiceTestRule()
 
@@ -83,8 +81,4 @@ class ServiceTest {
 
        assertNull(service.getPublicKey("Anthony"))
     }
-
-
-
-
 }
